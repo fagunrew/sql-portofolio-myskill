@@ -1,0 +1,14 @@
+select
+  extract(year from order_date) year,
+  extract(month from order_date) month,
+  sum(after_discount) total_transaksi
+from
+  `Tugas1.order_detail`
+where
+  is_valid = 1
+  and
+  extract(year from order_date) = 2021
+group by
+  year, month
+order by
+  total_transaksi desc
