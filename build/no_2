@@ -1,0 +1,20 @@
+select
+  extract(year FROM order_date) year,
+  s.category,
+  sum(o.after_discount) as nilai_transaksi
+from
+  `Tugas1.order_detail` as o
+left join
+  `Tugas1.sku_detail` as s
+on
+  o.sku_id = s.id
+where 
+  is_valid = 1 
+  and 
+  extract(year FROM order_date) = 2022
+group by
+  o.order_date, s.category
+order by 
+  nilai_transaksi desc
+limit
+  1
