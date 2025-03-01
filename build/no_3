@@ -1,0 +1,30 @@
+with transaksi_tahunan as (
+select
+  s.category,
+  sum(case when extract(year from o.order_date) = 2021 then o.after_discount else 0 end) as total_sales_2021,
+  sum(case when extract(year from o.order_date) = 2022 then o.after_discount else 0 end) as total_sales_2022
+from
+  `Tugas1.order_detail` as o
+left join
+  `Tugas1.sku_detail` as s
+on
+  o.sku_id = s.id
+where
+  o.is_valid = 1
+group by
+  s.category
+)
+
+select
+  category,
+  round(total_sales_2021) as total_sales_2021,
+  round(total_sales_2022) as total_sales_2022,
+  round(total_sales_2022 - total_sales_2021) as growth_value,
+  case 
+    when total_sales_2022 > total_sales_2021 then 'Meningkat' 
+    else 'Menurun'
+  end as keterangan
+from
+  transaksi_tahunan
+order by
+  growth_value desc
